@@ -6,13 +6,16 @@ TagManager:
   tags:
   - God Mode
   - Health Pack
-  - Super Speed
   - Obstacles
+  - SuperSpeed
+  - RespawnZone
+  - Floor
+  - Shield
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ceilings
   - Water
   - UI
   - 
