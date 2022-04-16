@@ -2,25 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-/// <summary>
-/// A simple free camera to be added to a Unity game object.
-///
-/// Keys:
-///	wasd / arrows	- movement
-///	q/e 			- up/down (local space)
-///	r/f 			- up/down (world space)
-///	pageup/pagedown	- up/down (world space)
-///	hold shift		- enable fast movement mode
-///	right mouse  	- enable free look
-///	mouse			- free look / rotation
-///        if (Input.GetKeyDown(KeyCode.C))c
-
-/// </summary>
-///
+using UnityEngine.UI;
 
 public class FreeLookCamera : MonoBehaviour
 {
@@ -30,17 +16,31 @@ public class FreeLookCamera : MonoBehaviour
     private Transform _target;
 
     [SerializeField]
-    private Rigidbody Player;
+    private Rigidbody player;
+
+    [SerializeField]
+    private Colisions colisions;
 
     [Header("Camera Varaiables")]
     [SerializeField]
-    private float maxFOV = 110f;
+    private float _maxFOV = 71;
 
     [SerializeField]
-    private float startFOV = 100.0f;
+    private float _startFOV = 70;
 
     [SerializeField]
-    private float MinSpeedToChangeFOV = 14f;
+    private float _boostSpeedFOV = 72;
+
+    [SerializeField]
+    private float _minSpeedToChangeFOV = 61;
+
+    [SerializeField]
+    private float FOVSpeedChange = 6f;
+
+    [SerializeField] private LayerMask CeilingCheckLayers;
+
+    [SerializeField]
+    private float heightChangeSpeed = 2;
 
     [Header("FreeLook Variables")]
     [Space]
@@ -57,54 +57,23 @@ public class FreeLookCamera : MonoBehaviour
     private Vector2 _rotationXMinMax = new Vector2(-40, 40);
 
     //Var
-    private Camera MainCam;
+    private Camera mainCam;
 
-    private Vector3 OriginalPos;
-    private Vector3 Newpos;
+    private Vector3 originOffset;
+    private Vector3 camOffset;
     private Vector3 _currentRotation;
     private Vector3 _smoothVelocity = Vector3.zero;
+    private Vector2 move;
+    private float speedMagnitude;
     private float _rotationY;
     private float _rotationX;
     private bool IsFreeCam = false;
-    private Vector2 move;
 
-    //Input
-    private Controller control;
-
-    private InputAction Cam;
-
-    private InputAction CamSwitch;
+    //Display
+    [SerializeField]
+    private Text displayText;
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~InputSystem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-    private void Awake()
-    {
-        control = new Controller();
-        Cam = control.PlayerController.Camera;
-        CamSwitch = control.PlayerController.CameraSwitch;
-    }
-
-    private void OnEnable()
-    {
-        //Enable
-        Cam.Enable();
-        CamSwitch.Enable();
-
-        //Stick Press
-        CamSwitch.started += OnCameraSwitch;
-
-        //Stick Analog
-        Cam.started += this.OnCamera;
-        Cam.performed += this.OnCamera;
-        Cam.canceled += ctx =>
-            this.move = Vector2.zero;
-    }
-
-    private void OnDisable()
-    {
-        Cam.Disable();
-        CamSwitch.Disable();
-    }
 
     public void OnCamera(InputAction.CallbackContext value)
     {
@@ -116,27 +85,41 @@ public class FreeLookCamera : MonoBehaviour
         if (value.started)
         {
             IsFreeCam = !IsFreeCam;
+
+            if (displayText != null)
+            {
+                displayText.gameObject.SetActive(IsFreeCam);
+            }
         }
     }
 
-    /*~~~~~~~~~~~~~~~~~~~~~~~~~~Function~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~UnityFrame Management~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     private void Start()
     {
-        MainCam = GetComponent<Camera>();
-        OriginalPos = MainCam.transform.position;
-        Newpos = Player.transform.position - OriginalPos;
+        mainCam = GetComponent<Camera>();
+        camOffset = new Vector3(0, 4, -10);
+        originOffset = camOffset;
 
-        MainCam.fieldOfView = startFOV;
+        mainCam.fieldOfView = _startFOV;
+        if (displayText != null)
+            displayText.gameObject.SetActive(IsFreeCam);
     }
 
     private void Update()
     {
-        //if (Input.GetButtonDown("RightStickPush"))
-        //{
-        //    IsFreeCam = !IsFreeCam;
-        //}
+        CamFunction();
+    }
 
+    private void FixedUpdate()
+    {
+        FovChanger();
+    }
+
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~Function~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    private void CamFunction()
+    {
         if (IsFreeCam)
         {
             float mouseX = move.y * _mouseSensitivity;
@@ -145,43 +128,73 @@ public class FreeLookCamera : MonoBehaviour
             _rotationY += mouseY;
             _rotationX += mouseX;
 
-            // Apply clamping for x rotation
             _rotationX = Mathf.Clamp(_rotationX, _rotationXMinMax.x, _rotationXMinMax.y);
 
             Vector3 nextRotation = new Vector3(_rotationX, _rotationY);
 
-            // Apply damping between rotation changes
             _currentRotation = Vector3.SmoothDamp(_currentRotation, nextRotation, ref _smoothVelocity, _smoothTime);
             transform.localEulerAngles = _currentRotation;
 
-            // Substract forward vector of the GameObject to point its forward vector to the target
             transform.position = _target.position - transform.forward * _distanceFromTarget;
         }
         else
         {
-            MainCam.transform.rotation = Quaternion.Euler(
-                Mathf.Clamp(Player.transform.rotation.x, 45f, 55f),
-                0,
-                Mathf.Clamp(Player.transform.rotation.z, -10.0f, 10.0f)
-            );
-            MainCam.transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y - Newpos.y, Player.transform.position.z - Newpos.z);
-        }
-        if (Player.velocity.magnitude > MinSpeedToChangeFOV)
-        {
-            if (MainCam.fieldOfView < maxFOV)
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.up, out hit, 5f, CeilingCheckLayers))
             {
-                MainCam.fieldOfView += (Player.velocity.magnitude * Time.deltaTime);
+                Debug.DrawRay(transform.position, transform.up * hit.distance, Color.yellow);
+
+                camOffset.y = Mathf.Lerp(camOffset.y, 0, heightChangeSpeed * Time.deltaTime);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.up * 5, Color.white);
+
+                camOffset.y = Mathf.Lerp(camOffset.y, originOffset.y, heightChangeSpeed * Time.deltaTime);
+            }
+
+            mainCam.transform.rotation = Quaternion.Euler(25, 0, 0);
+
+            mainCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + camOffset.y, player.transform.position.z + camOffset.z);
+        }
+    }
+
+    private void FovChanger()
+    {
+        speedMagnitude = player.velocity.magnitude;
+
+        if (speedMagnitude > _minSpeedToChangeFOV && !colisions.isSuperSpeed)
+        {
+            if (mainCam.fieldOfView < _maxFOV)
+            {
+                mainCam.fieldOfView = Mathf.Lerp(mainCam.fieldOfView, _maxFOV, FOVSpeedChange * Time.fixedDeltaTime);
+            }
+            else
+            {
+                mainCam.fieldOfView = _maxFOV;
+            }
+        }
+        else if (colisions.isSuperSpeed)
+        {
+            if (mainCam.fieldOfView < _boostSpeedFOV)
+            {
+                mainCam.fieldOfView = Mathf.Lerp(mainCam.fieldOfView, _boostSpeedFOV, FOVSpeedChange * Time.fixedDeltaTime);
+            }
+            else
+            {
+                mainCam.fieldOfView = _boostSpeedFOV;
             }
         }
         else
         {
-            if (MainCam.fieldOfView > startFOV)
+            if (mainCam.fieldOfView > _startFOV)
             {
-                MainCam.fieldOfView += (-(Player.velocity.magnitude) * Time.deltaTime - 0.01f);
+                mainCam.fieldOfView = Mathf.Lerp(mainCam.fieldOfView, _startFOV, FOVSpeedChange * Time.fixedDeltaTime);
             }
             else
             {
-                MainCam.fieldOfView = startFOV;
+                mainCam.fieldOfView = _startFOV;
             }
         }
     }

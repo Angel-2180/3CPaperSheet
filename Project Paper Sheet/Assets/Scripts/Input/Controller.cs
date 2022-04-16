@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Controller.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Input/Controller.inputactions'
 
 using System;
 using System.Collections;
@@ -38,38 +38,6 @@ public class @Controller : IInputActionCollection, IDisposable
                     ""name"": ""CameraSwitch"",
                     ""type"": ""Button"",
                     ""id"": ""19fa9e5c-79ef-4ebd-b96b-176de775c255"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""TiltLeft"",
-                    ""type"": ""Button"",
-                    ""id"": ""b6025666-cb1d-4891-b0a1-5901f85c33d0"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""TiltRight"",
-                    ""type"": ""Button"",
-                    ""id"": ""e9929e62-bff0-436c-8156-e37b8280e7e6"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""BarrelLeft"",
-                    ""type"": ""Button"",
-                    ""id"": ""1fe58f0a-c18a-4f0f-a791-4b1c945722c5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""BarrelRight"",
-                    ""type"": ""Button"",
-                    ""id"": ""7304ad82-50cb-41fa-a958-5e46ebeede6f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -132,6 +100,61 @@ public class @Controller : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""WASD"",
+                    ""id"": ""741fc76c-8d02-4896-bbfe-467a7ab451e2"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""4a371c6d-e535-4d08-b002-3b99e2527ca6"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""7b51f1c0-75b7-4fc5-b45b-30fcd7bdf470"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""fe6d3f7e-512c-4506-94d5-379ae9522b08"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""80e9fcba-280f-4d59-9d7d-972d2324a2a6"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": ""RightStick"",
                     ""id"": ""3e3fde79-98b8-4921-b409-1c2017aba7d7"",
                     ""path"": ""2DVector(mode=2)"",
@@ -187,6 +210,61 @@ public class @Controller : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""Arrow"",
+                    ""id"": ""8fbe01dc-6cfb-46cb-859c-9479e6318add"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""58b57d16-a5c4-46eb-ba9c-edf623dcb751"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""9763101e-f910-4c51-a77f-aec72050604b"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""b3cc2854-5fe3-46d6-973e-54503d4addae"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""0baa0318-166e-4cd8-9eb5-d947dd968baf"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""ac90af5a-d07b-45b4-a146-731bc539644d"",
                     ""path"": ""<Gamepad>/rightStickPress"",
@@ -199,45 +277,12 @@ public class @Controller : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""0e150dac-cbe9-4625-a044-5db671e68bfb"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""id"": ""9e0601c3-a7fb-4c1c-aed9-e4e35d38cf0e"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""TiltLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6357b01a-b4a2-4c70-8b32-347253d0fdec"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""TiltRight"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""342bd063-6971-49c9-adfc-d7b053557383"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""BarrelLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2c5bbb62-d50b-4bf3-a783-770111594bcb"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""BarrelRight"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""CameraSwitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -255,6 +300,17 @@ public class @Controller : IInputActionCollection, IDisposable
                     ""isOR"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Keyboard"",
+            ""bindingGroup"": ""Keyboard"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
         }
     ]
 }");
@@ -263,10 +319,6 @@ public class @Controller : IInputActionCollection, IDisposable
         m_PlayerController_Movement = m_PlayerController.FindAction("Movement", throwIfNotFound: true);
         m_PlayerController_Camera = m_PlayerController.FindAction("Camera", throwIfNotFound: true);
         m_PlayerController_CameraSwitch = m_PlayerController.FindAction("CameraSwitch", throwIfNotFound: true);
-        m_PlayerController_TiltLeft = m_PlayerController.FindAction("TiltLeft", throwIfNotFound: true);
-        m_PlayerController_TiltRight = m_PlayerController.FindAction("TiltRight", throwIfNotFound: true);
-        m_PlayerController_BarrelLeft = m_PlayerController.FindAction("BarrelLeft", throwIfNotFound: true);
-        m_PlayerController_BarrelRight = m_PlayerController.FindAction("BarrelRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -319,10 +371,6 @@ public class @Controller : IInputActionCollection, IDisposable
     private readonly InputAction m_PlayerController_Movement;
     private readonly InputAction m_PlayerController_Camera;
     private readonly InputAction m_PlayerController_CameraSwitch;
-    private readonly InputAction m_PlayerController_TiltLeft;
-    private readonly InputAction m_PlayerController_TiltRight;
-    private readonly InputAction m_PlayerController_BarrelLeft;
-    private readonly InputAction m_PlayerController_BarrelRight;
     public struct PlayerControllerActions
     {
         private @Controller m_Wrapper;
@@ -330,10 +378,6 @@ public class @Controller : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_PlayerController_Movement;
         public InputAction @Camera => m_Wrapper.m_PlayerController_Camera;
         public InputAction @CameraSwitch => m_Wrapper.m_PlayerController_CameraSwitch;
-        public InputAction @TiltLeft => m_Wrapper.m_PlayerController_TiltLeft;
-        public InputAction @TiltRight => m_Wrapper.m_PlayerController_TiltRight;
-        public InputAction @BarrelLeft => m_Wrapper.m_PlayerController_BarrelLeft;
-        public InputAction @BarrelRight => m_Wrapper.m_PlayerController_BarrelRight;
         public InputActionMap Get() { return m_Wrapper.m_PlayerController; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -352,18 +396,6 @@ public class @Controller : IInputActionCollection, IDisposable
                 @CameraSwitch.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnCameraSwitch;
                 @CameraSwitch.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnCameraSwitch;
                 @CameraSwitch.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnCameraSwitch;
-                @TiltLeft.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnTiltLeft;
-                @TiltLeft.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnTiltLeft;
-                @TiltLeft.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnTiltLeft;
-                @TiltRight.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnTiltRight;
-                @TiltRight.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnTiltRight;
-                @TiltRight.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnTiltRight;
-                @BarrelLeft.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBarrelLeft;
-                @BarrelLeft.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBarrelLeft;
-                @BarrelLeft.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBarrelLeft;
-                @BarrelRight.started -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBarrelRight;
-                @BarrelRight.performed -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBarrelRight;
-                @BarrelRight.canceled -= m_Wrapper.m_PlayerControllerActionsCallbackInterface.OnBarrelRight;
             }
             m_Wrapper.m_PlayerControllerActionsCallbackInterface = instance;
             if (instance != null)
@@ -377,18 +409,6 @@ public class @Controller : IInputActionCollection, IDisposable
                 @CameraSwitch.started += instance.OnCameraSwitch;
                 @CameraSwitch.performed += instance.OnCameraSwitch;
                 @CameraSwitch.canceled += instance.OnCameraSwitch;
-                @TiltLeft.started += instance.OnTiltLeft;
-                @TiltLeft.performed += instance.OnTiltLeft;
-                @TiltLeft.canceled += instance.OnTiltLeft;
-                @TiltRight.started += instance.OnTiltRight;
-                @TiltRight.performed += instance.OnTiltRight;
-                @TiltRight.canceled += instance.OnTiltRight;
-                @BarrelLeft.started += instance.OnBarrelLeft;
-                @BarrelLeft.performed += instance.OnBarrelLeft;
-                @BarrelLeft.canceled += instance.OnBarrelLeft;
-                @BarrelRight.started += instance.OnBarrelRight;
-                @BarrelRight.performed += instance.OnBarrelRight;
-                @BarrelRight.canceled += instance.OnBarrelRight;
             }
         }
     }
@@ -402,14 +422,19 @@ public class @Controller : IInputActionCollection, IDisposable
             return asset.controlSchemes[m_GamepadSchemeIndex];
         }
     }
+    private int m_KeyboardSchemeIndex = -1;
+    public InputControlScheme KeyboardScheme
+    {
+        get
+        {
+            if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
+            return asset.controlSchemes[m_KeyboardSchemeIndex];
+        }
+    }
     public interface IPlayerControllerActions
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnCamera(InputAction.CallbackContext context);
         void OnCameraSwitch(InputAction.CallbackContext context);
-        void OnTiltLeft(InputAction.CallbackContext context);
-        void OnTiltRight(InputAction.CallbackContext context);
-        void OnBarrelLeft(InputAction.CallbackContext context);
-        void OnBarrelRight(InputAction.CallbackContext context);
     }
 }

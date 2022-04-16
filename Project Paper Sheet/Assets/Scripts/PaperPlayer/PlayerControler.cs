@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerControler : MonoBehaviour
 
@@ -14,126 +15,41 @@ public class PlayerControler : MonoBehaviour
     [Space]
     [Header("Players movement variables")]
     [SerializeField]
-    private float MinSpeed = 13.8f;
+    private float minSpeed = 13.8f;
 
     [SerializeField]
-    private float Drag = 6f;
+    private float pDrag = 6f;
 
     [SerializeField]
     private float rotFactor = 20;
 
     [SerializeField]
-    private float LengthOfBarrell = 5f;
+    private float startingForce = 10f;
 
     [SerializeField]
     private Vector3 Gravity = new Vector3(0, -1, 0);
 
-    //Input
+    [Space]
+    private Colisions collisions;
 
-    private Controller control;
-    private InputAction Move;
-    private InputAction TiltLeft;
-    private InputAction TiltRight;
-    private InputAction BarrelLeft;
-    private InputAction BarrelRight;
+    [HideInInspector]
+    public Vector3 rot;
 
-    //Var
-
-    private Vector3 rot;
     private Vector2 move;
+
+    [HideInInspector]
     public float Percentage;
-    private bool lb = false;
-    private bool rb = false;
-    private bool lt = false;
-    private bool rt = false;
 
-    /*~~~~~~~~~~~~~~~~~~~~~~~~~~InputSystem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    private float tiltWaitTime = 0.5f;
+    private float tiltFactor = 0.002f;
 
-    private void Awake()
-    {
-        control = new Controller();
-        Move = control.PlayerController.Movement;
-        TiltLeft = control.PlayerController.TiltLeft;
-        TiltRight = control.PlayerController.TiltRight;
-        BarrelLeft = control.PlayerController.BarrelLeft;
-        BarrelRight = control.PlayerController.BarrelRight;
-    }
+    private bool firstInialisation = true;
 
-    private void OnEnable()
-    {
-        Move.Enable();
-        TiltLeft.Enable();
-        TiltRight.Enable();
-        BarrelLeft.Enable();
-        BarrelRight.Enable();
-
-        Move.started += this.OnMovement;
-        Move.performed += this.OnMovement;
-
-        TiltLeft.started += this.OnTiltLeft;
-        TiltLeft.performed += this.OnTiltLeft;
-        TiltRight.started += this.OnTiltRight;
-        TiltRight.performed += this.OnTiltRight;
-
-        BarrelLeft.started += this.OnBarrelLeft;
-        BarrelRight.started += this.OnBarrelRight;
-
-        BarrelLeft.canceled += ctx =>
-            this.lt = false;
-        BarrelRight.canceled += ctx =>
-            this.rt = false;
-
-        TiltLeft.canceled += ctx =>
-            this.lb = false;
-        TiltRight.canceled += ctx =>
-            this.rb = false;
-
-        Move.canceled += ctx =>
-            this.move = Vector2.zero;
-    }
-
-    private void OnDisable()
-    {
-        Move.Disable();
-        TiltLeft.Disable();
-        TiltRight.Disable();
-    }
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~InputSystemFunction~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     public void OnMovement(InputAction.CallbackContext value)
     {
         move = value.ReadValue<Vector2>();
-    }
-
-    public void OnTiltLeft(InputAction.CallbackContext value)
-    {
-        if (value.started || value.performed)
-        {
-            lb = true;
-        }
-    }
-
-    public void OnTiltRight(InputAction.CallbackContext value)
-    {
-        if (value.started)
-        {
-            rb = true;
-        }
-    }
-
-    public void OnBarrelRight(InputAction.CallbackContext value)
-    {
-        if (value.started)
-        {
-            rt = true;
-        }
-    }
-
-    public void OnBarrelLeft(InputAction.CallbackContext value)
-    {
-        if (value.started || value.performed)
-        {
-            lt = true;
-        }
     }
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~UnityFrame Management~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -141,74 +57,86 @@ public class PlayerControler : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        Physics.gravity = Gravity;
+        collisions = GetComponent<Colisions>();
+        Physics.gravity = Vector3.zero;
         rot = transform.eulerAngles;
     }
 
-    // Update is called once per frame
     private void Update()
     {
-        //Rotate player
-        // X
-        rot.x += rotFactor * -move.y * Time.deltaTime;
-        rot.x = Mathf.Clamp(rot.x, -5, 45);
-        // Y
-        rot.y += rotFactor * move.x * Time.deltaTime;
-        // Z
-        Tilting();
-        if (lt || rt)
+        if (Timer.CountdownDone && !collisions.isFinished)
         {
-            StartCoroutine(BarrelRoll());
+            if (move != null)
+            {
+                //Rotate player
+                //X
+                rot.x += rotFactor * move.y * Time.deltaTime;
+
+                rot.x = Mathf.Clamp(rot.x, -5, 45);
+                //Y
+                rot.y += rotFactor * move.x * Time.deltaTime;
+                //Z
+
+                rot.z += -rotFactor * move.x * Time.deltaTime;
+                rot.z = Mathf.Clamp(rot.z, -5, 5);
+            }
+
+            if (rot.x < 0 && move.y == 0)
+            {
+                StartCoroutine(TiltDown());
+            }
+
+            transform.rotation = Quaternion.Euler(rot);
+            Percentage = rot.x / 45;
         }
-        transform.rotation = Quaternion.Euler(rot);
-        Percentage = rot.x / 45;
+        else
+        {
+            rby.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+    }
 
-        //Drag : Fast(4), Slow(6)
-        float mod_drag = (Percentage * -Drag) + Drag;
-        //Speed : Fast(13.8), Slow(12.5)
-        float mod_speed = Percentage * (MinSpeed - 12.5f) + MinSpeed;
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
+        if (firstInialisation && Timer.CountdownDone)
+        {
+            Initialize();
+        }
+        if (Timer.CountdownDone && !collisions.toRespawn)
+        {
+            //Drag : Fast(4), Slow(6)
+            float mod_drag = (Percentage * -pDrag) + pDrag;
+            //Speed : Fast(13.8), Slow(12.5)
+            float mod_speed = Percentage * (minSpeed - 12.5f) + minSpeed;
 
-        rby.drag = mod_drag;
-        Vector3 localV = transform.InverseTransformDirection(rby.velocity);
-        localV.z = mod_speed;
-        rby.velocity = transform.TransformDirection(localV);
+            rby.drag = mod_drag;
+            Vector3 localV = transform.InverseTransformDirection(rby.velocity);
+            localV.z = mod_speed;
+            rby.velocity = transform.TransformDirection(localV);
+        }
+        else
+        {
+            //rby.constraints = RigidbodyConstraints.FreezePosition;
+            rby.velocity = transform.TransformDirection(Vector3.zero);
+        }
     }
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~Function~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-    private void Tilting()
+    private void Initialize()
     {
-        if (lb)
-        {
-            rot.z += -rotFactor * Time.deltaTime;
-            rot.z = Mathf.Clamp(rot.z, -5, 5);
-            rot.y += -rotFactor * Time.deltaTime;
-            rot.y = Mathf.Clamp(rot.y, -12, 12);
-        }
-        else if (rb)
-        {
-            rot.z += rotFactor * Time.deltaTime;
-            rot.z = Mathf.Clamp(rot.z, -5, 5);
-            rot.y += rotFactor * Time.deltaTime;
-            rot.y = Mathf.Clamp(rot.y, -12, 12);
-        }
+        Physics.gravity = Gravity;
+        rby.AddRelativeForce(Vector3.forward * startingForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        firstInialisation = false;
     }
 
-    private IEnumerator BarrelRoll()
+    private IEnumerator TiltDown()
     {
-        print("Do a Barell Roll");
-        if (lt)
+        for (var i = rot.x; i < 0; ++i)
         {
-            print("Port");
-            transform.Translate(-LengthOfBarrell, 0, 0);
-            lt = false;
+            yield return new WaitForSeconds(tiltWaitTime);
+            rot.x += tiltFactor;
         }
-        else if (rt)
-        {
-            print("Starboard");
-            transform.Translate(LengthOfBarrell, 0, 0);
-            rt = false;
-        }
-        yield return new WaitForSeconds(5f);
+        yield break;
     }
 }
