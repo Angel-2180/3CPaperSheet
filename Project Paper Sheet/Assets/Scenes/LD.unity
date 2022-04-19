@@ -648,7 +648,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3441926800102033090, guid: 74ef782789cd53d4e92e7acc4f9c825f, type: 3}
       propertyPath: m_JoinBehavior
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3441926800102033090, guid: 74ef782789cd53d4e92e7acc4f9c825f, type: 3}
       propertyPath: m_PlayerPrefab

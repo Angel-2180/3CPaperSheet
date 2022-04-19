@@ -16,7 +16,7 @@ public class Colisions : MonoBehaviour
     [Header("Life :")]
     public GameObject[] hearts;
 
-    public int life;
+    public int life = 3;
     private bool isDead;
     public bool toRespawn;
     private bool isShield = false;
