@@ -5514,8 +5514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24bcb3b3344a6d440ae78ed3bc61a220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 180
-  isGodMod: 0
+  RotationSpeedX: 180
+  RotationSpeedY: 0
+  RotationZSpeed: 0
+  RespawnTime: 2
 --- !u!64 &1138445774
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5923,8 +5925,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24bcb3b3344a6d440ae78ed3bc61a220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 180
-  isGodMod: 0
+  RotationSpeedX: 180
+  RotationSpeedY: 0
+  RotationZSpeed: 0
+  RespawnTime: 2
 --- !u!1 &1203152014
 GameObject:
   m_ObjectHideFlags: 0
